@@ -77,58 +77,60 @@ foreach ($provider in $provider_list){
 }
 
 # Generate unique random suffix
-[string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
+[string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | ForEach-Object {[char]$_})
 Write-Host "Your randomly-generated suffix for Azure resources is $suffix"
-$resourceGroupName = "dp500-$suffix"
+$resourceGroupName = "Spielwiese_Ilia_Sinev"
+Write-Host "Using Spielwiese_Ilia_Sinev resource group"
 
 # Choose a random region
-Write-Host "Finding an available region. This may take several minutes...";
-$delay = 0, 30, 60, 90, 120 | Get-Random
-Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
-$preferred_list = "australiaeast","centralus","southcentralus","eastus2","northeurope","southeastasia","uksouth","westeurope","westus","westus2"
-$locations = Get-AzLocation | Where-Object {
-    $_.Providers -contains "Microsoft.Synapse" -and
-    $_.Providers -contains "Microsoft.Sql" -and
-    $_.Providers -contains "Microsoft.Storage" -and
-    $_.Providers -contains "Microsoft.Compute" -and
-    $_.Location -in $preferred_list
-}
-$max_index = $locations.Count - 1
-$rand = (0..$max_index) | Get-Random
-$Region = $locations.Get($rand).Location
+# Write-Host "Finding an available region. This may take several minutes...";
+# $delay = 0, 30, 60, 90, 120 | Get-Random
+# Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
+# $preferred_list = "australiaeast","centralus","southcentralus","eastus2","northeurope","southeastasia","uksouth","westeurope","westus","westus2"
+# $locations = Get-AzLocation | Where-Object {
+#     $_.Providers -contains "Microsoft.Synapse" -and
+#     $_.Providers -contains "Microsoft.Sql" -and
+#     $_.Providers -contains "Microsoft.Storage" -and
+#     $_.Providers -contains "Microsoft.Compute" -and
+#     $_.Location -in $preferred_list
+# }
+# $max_index = $locations.Count - 1
+# $rand = (0..$max_index) | Get-Random
+# $Region = $locations.Get($rand).Location
+# $Region = "westeurope"
 
 # Test for subscription Azure SQL capacity constraints in randomly selected regions
 # (for some subsription types, quotas are adjusted dynamically based on capacity)
- $success = 0
- $tried_list = New-Object Collections.Generic.List[string]
+#  $success = 0
+#  $tried_list = New-Object Collections.Generic.List[string]
 
- while ($success -ne 1){
-    write-host "Trying $Region"
-    $capability = Get-AzSqlCapability -LocationName $Region
-    if($capability.Status -eq "Available")
-    {
-        $success = 1
-        write-host "Using $Region"
-    }
-    else
-    {
-        $success = 0
-        $tried_list.Add($Region)
-        $locations = $locations | Where-Object {$_.Location -notin $tried_list}
-        if ($locations.Count -ne 1)
-        {
-            $rand = (0..$($locations.Count - 1)) | Get-Random
-            $Region = $locations.Get($rand).Location
-        }
-        else {
-            Write-Host "Couldn't find an available region for deployment."
-            Write-Host "Sorry! Try again later."
-            Exit
-        }
-    }
-}
-Write-Host "Creating $resourceGroupName resource group in $Region ..."
-New-AzResourceGroup -Name $resourceGroupName -Location $Region | Out-Null
+#  while ($success -ne 1){
+#     write-host "Trying $Region"
+#     $capability = Get-AzSqlCapability -LocationName $Region
+#     if($capability.Status -eq "Available")
+#     {
+#         $success = 1
+#         write-host "Using $Region"
+#     }
+#     else
+#     {
+#         $success = 0
+#         $tried_list.Add($Region)
+#         $locations = $locations | Where-Object {$_.Location -notin $tried_list}
+#         if ($locations.Count -ne 1)
+#         {
+#             $rand = (0..$($locations.Count - 1)) | Get-Random
+#             $Region = $locations.Get($rand).Location
+#         }
+#         else {
+#             Write-Host "Couldn't find an available region for deployment."
+#             Write-Host "Sorry! Try again later."
+#             Exit
+#         }
+#     }
+# }
+# Write-Host "Creating $resourceGroupName resource group in $Region ..."
+# New-AzResourceGroup -Name $resourceGroupName -Location $Region | Out-Null
 
 # Create Synapse workspace
 $synapseWorkspace = "synapse$suffix"
