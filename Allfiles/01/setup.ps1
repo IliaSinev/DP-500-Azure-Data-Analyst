@@ -68,13 +68,13 @@ while ($complexPassword -ne 1)
 }
 
 # Register resource providers
-Write-Host "Registering resource providers...";
-$provider_list = "Microsoft.Synapse", "Microsoft.Sql", "Microsoft.Storage", "Microsoft.Compute"
-foreach ($provider in $provider_list){
-    $result = Register-AzResourceProvider -ProviderNamespace $provider
-    $status = $result.RegistrationState
-    Write-Host "$provider : $status"
-}
+# Write-Host "Registering resource providers...";
+# $provider_list = "Microsoft.Synapse", "Microsoft.Sql", "Microsoft.Storage", "Microsoft.Compute"
+# foreach ($provider in $provider_list){
+#     $result = Register-AzResourceProvider -ProviderNamespace $provider
+#     $status = $result.RegistrationState
+#     Write-Host "$provider : $status"
+# }
 
 # Generate unique random suffix
 [string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | ForEach-Object {[char]$_})
