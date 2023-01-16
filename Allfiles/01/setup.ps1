@@ -136,7 +136,7 @@ Write-Host "Using Spielwiese_Ilia_Sinev resource group"
 $synapseWorkspace = "synapse$suffix"
 $dataLakeAccountName = "datalake$suffix"
 
-write-host "Creating $synapseWorkspace Synapse Analytics workspace in $resourceGroupName resource group..."
+Write-Host "Creating $synapseWorkspace Synapse Analytics workspace in $resourceGroupName resource group..."
 New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
   -TemplateFile "setup.json" `
   -Mode Complete `
@@ -153,8 +153,8 @@ write-host "(you can ignore any warnings!)"
 $subscriptionId = (Get-AzContext).Subscription.Id
 $userName = ((az ad signed-in-user show) | ConvertFrom-JSON).UserPrincipalName
 $id = (Get-AzADServicePrincipal -DisplayName $synapseWorkspace).id
-New-AzRoleAssignment -Objectid $id -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" -ErrorAction SilentlyContinue;
-New-AzRoleAssignment -SignInName $userName -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" -ErrorAction SilentlyContinue;
+New-AzRoleAssignment -Objectid $id -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" ;
+New-AzRoleAssignment -SignInName $userName -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" ;
 
 # Upload files
 write-host "Loading data..."
