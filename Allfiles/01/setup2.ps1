@@ -2,7 +2,7 @@ Clear-Host
 write-host "Starting script at $(Get-Date)"
 
 $resourceGroupName="Spielwiese_Ilia_Sinev"
-$dataLakeAccountName="dl-spielwiese"
+$dataLakeAccountName="datalakeqr9jb18"
 
 # Upload files
 write-host "Loading data..."
